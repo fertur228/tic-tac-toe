@@ -1,10 +1,12 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const morgan = require("morgan");
 const { Pool } = require("pg");
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
+const host = "0.0.0.0";
 
 // Настройка подключения к PostgreSQL через переменные окружения
 const pool = new Pool({
@@ -18,6 +20,7 @@ const pool = new Pool({
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
+app.use(morgan("dev"));
 
 // Настройка статических файлов
 app.use(express.static("public"));
@@ -29,6 +32,11 @@ pool.connect()
         console.error("Error connecting to PostgreSQL:", err);
         process.exit(1);
     });
+
+// Корневой маршрут для загрузки HTML
+app.get("/", (req, res) => {
+    res.sendFile(__dirname + "/public/index.html");
+});
 
 // Маршрут: Добавление или обновление игрока
 app.post("/player", async (req, res) => {
@@ -68,6 +76,6 @@ app.get("/players", async (req, res) => {
 });
 
 // Запуск сервера
-app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
+app.listen(port, host, () => {
+    console.log(`Server running on http://${host}:${port}`);
 });
