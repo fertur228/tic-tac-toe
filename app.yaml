@@ -1,0 +1,12 @@
+runtime: nodejs18
+instance_class: F1
+entrypoint: node server.js
+
+env_variables:
+  DB_USER: 'postgres'
+  DB_PASSWORD: 'ваш_пароль'
+  DB_NAME: 'tic-tac-toeDB'
+  DB_HOST: '/cloudsql/primeval-door-445117-u2:europe-west1:tic-tac-toe-db'
+
+beta_settings:
+  cloud_sql_instances: primeval-door-445117-u2:europe-west1:tic-tac-toe-db
