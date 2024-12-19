@@ -19,6 +19,9 @@ const pool = new Pool({
 app.use(cors());
 app.use(bodyParser.json());
 
+// Настройка статических файлов
+app.use(express.static("public"));
+
 // Проверка подключения к базе данных
 pool.connect()
     .then(() => console.log("Connected to PostgreSQL"))
@@ -26,11 +29,6 @@ pool.connect()
         console.error("Error connecting to PostgreSQL:", err);
         process.exit(1);
     });
-
-// Корневой маршрут
-app.get("/", (req, res) => {
-    res.send("Welcome to Tic-Tac-Toe API! Use /players to get the list of players or /player to update player data.");
-});
 
 // Маршрут: Добавление или обновление игрока
 app.post("/player", async (req, res) => {
