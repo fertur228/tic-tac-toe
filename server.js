@@ -9,13 +9,16 @@ const port = process.env.PORT || 3000;
 const host = "0.0.0.0";
 
 // Настройка подключения к PostgreSQL через переменные окружения
+const { Pool } = require("pg");
+
 const pool = new Pool({
-    user: process.env.DB_USER || "postgres",
-    host: process.env.DB_HOST || "localhost",
-    database: process.env.DB_NAME || "tic-tac-toeDB",
-    password: process.env.DB_PASSWORD || "barys",
-    port: process.env.DB_PORT || 5432,
+    connectionString: process.env.DATABASE_URL, // Используем переменную окружения
+    ssl: {
+        rejectUnauthorized: false, // Требуется для подключения к Render
+    },
 });
+
+
 
 // Middleware
 app.use(cors());
@@ -85,4 +88,20 @@ app.get("/players", async (req, res) => {
 // Запуск сервера
 app.listen(port, host, () => {
     console.log(`Server running on http://${host}:${port}`);
+});
+
+app.get("/init-db", async (req, res) => {
+    try {
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS players (
+                name TEXT PRIMARY KEY,
+                games_played INT DEFAULT 0,
+                points INT DEFAULT 0
+            );
+        `);
+        res.send("Database initialized");
+    } catch (err) {
+        console.error("Error initializing database:", err);
+        res.status(500).send("Error initializing database");
+    }
 });
