@@ -8,11 +8,11 @@ const port = 3000;
 
 // Настройка подключения к PostgreSQL через переменные окружения
 const pool = new Pool({
-    user: process.env.DB_USER || "postgres", // Пользователь базы данных
-    host: process.env.DB_HOST || "localhost", // Хост базы данных
-    database: process.env.DB_NAME || "tic-tac-toeDB", // Имя базы данных
-    password: process.env.DB_PASSWORD || "barys", // Пароль пользователя
-    port: process.env.DB_PORT || 5432, // Порт PostgreSQL
+    user: process.env.DB_USER || "postgres",
+    host: process.env.DB_HOST || "localhost",
+    database: process.env.DB_NAME || "tic-tac-toeDB",
+    password: process.env.DB_PASSWORD || "barys",
+    port: process.env.DB_PORT || 5432,
 });
 
 // Middleware
@@ -26,6 +26,11 @@ pool.connect()
         console.error("Error connecting to PostgreSQL:", err);
         process.exit(1);
     });
+
+// Корневой маршрут
+app.get("/", (req, res) => {
+    res.send("Welcome to Tic-Tac-Toe API! Use /players to get the list of players or /player to update player data.");
+});
 
 // Маршрут: Добавление или обновление игрока
 app.post("/player", async (req, res) => {
