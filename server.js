@@ -9,7 +9,7 @@ const port = process.env.PORT || 3000;
 const host = "0.0.0.0";
 
 // Настройка подключения к PostgreSQL через переменные окружения
-const { Pool } = require("pg");
+
 
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL, // Используем переменную окружения
