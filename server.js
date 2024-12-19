@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -8,25 +9,19 @@ const app = express();
 const port = process.env.PORT || 3000;
 const host = "0.0.0.0";
 
-// Настройка подключения к PostgreSQL через переменные окружения
-
-
+// Настройка подключения к базе данных
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL, // Используем переменную окружения
     ssl: {
-        rejectUnauthorized: false, // Требуется для подключения к Render
+        rejectUnauthorized: false, // Требуется для Render
     },
 });
-
-
 
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
 app.use(morgan("dev"));
-
-// Настройка статических файлов
-app.use(express.static("public"));
+app.use(express.static("public")); // Для загрузки статических файлов (HTML, CSS, JS)
 
 // Проверка подключения к базе данных
 pool.connect()
@@ -36,60 +31,7 @@ pool.connect()
         process.exit(1);
     });
 
-// Корневой маршрут для загрузки HTML
-app.get("/", (req, res) => {
-    res.sendFile(__dirname + "/public/index.html");
-});
-
-// Маршрут: Добавление или обновление игрока
-app.post("/player", async (req, res) => {
-    const { name, points } = req.body;
-
-    if (!name || typeof points !== "number") {
-        console.error("Invalid input data:", { name, points });
-        return res.status(400).send("Invalid input data");
-    }
-
-    try {
-        console.log("Incoming data:", { name, points });
-
-        const player = await pool.query(
-            `INSERT INTO players (name, games_played, points)
-             VALUES ($1, 1, $2)
-             ON CONFLICT (name)
-             DO UPDATE SET 
-             games_played = players.games_played + 1,
-             points = players.points + $2
-             RETURNING *`,
-            [name, points]
-        );
-
-        console.log("Updated player:", player.rows[0]);
-        res.status(200).json(player.rows[0]);
-    } catch (err) {
-        console.error("Error saving player data:", err);
-        res.status(500).send("Error saving player data");
-    }
-});
-
-// Маршрут: Получение списка игроков
-app.get("/players", async (req, res) => {
-    try {
-        console.log("Fetching players...");
-        const players = await pool.query("SELECT * FROM players ORDER BY points DESC");
-        console.log("Players retrieved:", players.rows);
-        res.status(200).json(players.rows);
-    } catch (err) {
-        console.error("Error retrieving players:", err);
-        res.status(500).send("Error retrieving players");
-    }
-});
-
-// Запуск сервера
-app.listen(port, host, () => {
-    console.log(`Server running on http://${host}:${port}`);
-});
-
+// Инициализация базы данных
 app.get("/init-db", async (req, res) => {
     try {
         await pool.query(`
@@ -104,4 +46,46 @@ app.get("/init-db", async (req, res) => {
         console.error("Error initializing database:", err);
         res.status(500).send("Error initializing database");
     }
+});
+
+// Добавление или обновление игрока
+app.post("/player", async (req, res) => {
+    const { name, points } = req.body;
+
+    if (!name || typeof points !== "number") {
+        return res.status(400).send("Invalid input data");
+    }
+
+    try {
+        const player = await pool.query(
+            `INSERT INTO players (name, games_played, points)
+             VALUES ($1, 1, $2)
+             ON CONFLICT (name)
+             DO UPDATE SET 
+             games_played = players.games_played + 1,
+             points = players.points + $2
+             RETURNING *`,
+            [name, points]
+        );
+        res.json(player.rows[0]);
+    } catch (err) {
+        console.error("Error saving player data:", err);
+        res.status(500).send("Error saving player data");
+    }
+});
+
+// Получение списка игроков
+app.get("/players", async (req, res) => {
+    try {
+        const result = await pool.query("SELECT * FROM players ORDER BY points DESC");
+        res.json(result.rows);
+    } catch (err) {
+        console.error("Error retrieving players:", err);
+        res.status(500).send("Error retrieving players");
+    }
+});
+
+// Запуск сервера
+app.listen(port, host, () => {
+    console.log(`Server running on http://${host}:${port}`);
 });

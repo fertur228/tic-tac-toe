@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    const API_URL = "https://your-app-name.onrender.com"; // Замените на реальный URL вашего сервера
+    const API_URL = "https://tic-tac-toe-p5xh.onrender.com/"; // Замените на ваш URL Render
 
     const cells = document.querySelectorAll(".cell");
     const statusText = document.getElementById("status");
@@ -22,37 +22,32 @@ document.addEventListener("DOMContentLoaded", async () => {
         [1, 4, 7],
         [2, 5, 8],
         [0, 4, 8],
-        [2, 4, 6]
+        [2, 4, 6],
     ];
 
-    // Загрузка рейтинга при заходе на страницу
+    // Загрузка рейтинга
     await updateScoreboard();
 
+    // Отправка данных игрока
     async function sendPlayerData(name, points) {
         try {
-            console.log(`Sending data: { name: ${name}, points: ${points} }`);
-            const response = await fetch(`${API_URL}/player`, {
+            await fetch(`${API_URL}/player`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ name, points }),
             });
-
-            if (!response.ok) {
-                console.error(`Server error: ${response.status} - ${await response.text()}`);
-            }
         } catch (error) {
             console.error("Error sending player data:", error);
         }
     }
 
+    // Обновление рейтинга
     async function updateScoreboard() {
         try {
-            console.log("Fetching players from server...");
             const response = await fetch(`${API_URL}/players`);
             const players = await response.json();
-            console.log("Fetched players:", players);
 
             const scoreboard = document.querySelector(".scoreboard");
             const playersListHTML = players.map(player => `
@@ -72,13 +67,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
+    // Обработка завершения игры
     async function handleGameEnd(winner, isDraw) {
         if (isDraw) {
-            console.log("Game ended in a draw");
             await sendPlayerData(player1, 1);
             await sendPlayerData(player2, 1);
         } else {
-            console.log(`Winner: ${winner}`);
             const loser = winner === player1 ? player2 : player1;
             await sendPlayerData(winner, 2);
             await sendPlayerData(loser, 0);
