@@ -1,14 +1,12 @@
 document.addEventListener("DOMContentLoaded", async () => {
+    const API_URL = "https://your-app-name.onrender.com"; // Замените на реальный URL вашего сервера
+
     const cells = document.querySelectorAll(".cell");
     const statusText = document.getElementById("status");
     const restartButton = document.getElementById("restartButton");
     const playerForm = document.getElementById("playerForm");
     const namePlayer1 = document.getElementById("namePlayer1");
     const namePlayer2 = document.getElementById("namePlayer2");
-    const gamesPlayer1 = document.getElementById("gamesPlayer1");
-    const gamesPlayer2 = document.getElementById("gamesPlayer2");
-    const pointsPlayer1 = document.getElementById("pointsPlayer1");
-    const pointsPlayer2 = document.getElementById("pointsPlayer2");
 
     let player1 = "Player 1";
     let player2 = "Player 2";
@@ -31,77 +29,62 @@ document.addEventListener("DOMContentLoaded", async () => {
     await updateScoreboard();
 
     async function sendPlayerData(name, points) {
-    try {
-        await fetch("http://localhost:3000/player", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ name, points }),
-        });
-    } catch (error) {
-        console.error("Error sending player data:", error);
-    }
-}
-
-
-
-    // Получение данных об игроках
-    async function fetchPlayerData(playerName) {
         try {
-            const response = await fetch("http://localhost:3000/players");
-            const players = await response.json();
-            const player = players.find(p => p.name === playerName);
-            return player || { games_played: 0, points: 0 };
+            console.log(`Sending data: { name: ${name}, points: ${points} }`);
+            const response = await fetch(`${API_URL}/player`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ name, points }),
+            });
+
+            if (!response.ok) {
+                console.error(`Server error: ${response.status} - ${await response.text()}`);
+            }
         } catch (error) {
-            console.error("Error fetching player data:", error);
-            return { games_played: 0, points: 0 };
+            console.error("Error sending player data:", error);
         }
     }
 
-// Обновление информации о рейтинге игроков
-async function updateScoreboard() {
-    try {
-        const response = await fetch("http://localhost:3000/players");
-        const players = await response.json();
+    async function updateScoreboard() {
+        try {
+            console.log("Fetching players from server...");
+            const response = await fetch(`${API_URL}/players`);
+            const players = await response.json();
+            console.log("Fetched players:", players);
 
-        // Динамически генерируем HTML для всех игроков
-        const scoreboard = document.querySelector(".scoreboard");
-        const playersListHTML = players.map(player => `
-            <div class="score-entry">
-                <p>${player.name}</p>
-                <p>Games: <span>${player.games_played}</span></p>
-                <p>Points: <span>${player.points}</span></p>
-            </div>
-        `).join("");
+            const scoreboard = document.querySelector(".scoreboard");
+            const playersListHTML = players.map(player => `
+                <div class="score-entry">
+                    <p>${player.name}</p>
+                    <p>Games: <span>${player.games_played}</span></p>
+                    <p>Points: <span>${player.points}</span></p>
+                </div>
+            `).join("");
 
-        // Обновляем HTML в блоке рейтинга
-        scoreboard.innerHTML = `
-            <h2>Scoreboard</h2>
-            ${playersListHTML}
-        `;
-    } catch (error) {
-        console.error("Error fetching players:", error);
+            scoreboard.innerHTML = `
+                <h2>Scoreboard</h2>
+                ${playersListHTML}
+            `;
+        } catch (error) {
+            console.error("Error fetching players:", error);
+        }
     }
-}
 
-
-
-    // Обновление данных после игры
     async function handleGameEnd(winner, isDraw) {
-    if (isDraw) {
-        // Если ничья, обеим сторонам добавляется 1 очко
-        await sendPlayerData(player1, 1);
-        await sendPlayerData(player2, 1);
-    } else {
-        // Если есть победитель
-        const loser = winner === player1 ? player2 : player1;
-        await sendPlayerData(winner, 2); // Победитель получает 2 очка
-        await sendPlayerData(loser, 0); // Проигравший увеличивает количество игр
+        if (isDraw) {
+            console.log("Game ended in a draw");
+            await sendPlayerData(player1, 1);
+            await sendPlayerData(player2, 1);
+        } else {
+            console.log(`Winner: ${winner}`);
+            const loser = winner === player1 ? player2 : player1;
+            await sendPlayerData(winner, 2);
+            await sendPlayerData(loser, 0);
+        }
+        await updateScoreboard();
     }
-    await updateScoreboard();
-}
-
 
     playerForm.addEventListener("submit", async (e) => {
         e.preventDefault();

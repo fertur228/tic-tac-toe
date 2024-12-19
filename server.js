@@ -43,10 +43,13 @@ app.post("/player", async (req, res) => {
     const { name, points } = req.body;
 
     if (!name || typeof points !== "number") {
+        console.error("Invalid input data:", { name, points });
         return res.status(400).send("Invalid input data");
     }
 
     try {
+        console.log("Incoming data:", { name, points });
+
         const player = await pool.query(
             `INSERT INTO players (name, games_played, points)
              VALUES ($1, 1, $2)
@@ -57,6 +60,8 @@ app.post("/player", async (req, res) => {
              RETURNING *`,
             [name, points]
         );
+
+        console.log("Updated player:", player.rows[0]);
         res.status(200).json(player.rows[0]);
     } catch (err) {
         console.error("Error saving player data:", err);
@@ -67,7 +72,9 @@ app.post("/player", async (req, res) => {
 // Маршрут: Получение списка игроков
 app.get("/players", async (req, res) => {
     try {
+        console.log("Fetching players...");
         const players = await pool.query("SELECT * FROM players ORDER BY points DESC");
+        console.log("Players retrieved:", players.rows);
         res.status(200).json(players.rows);
     } catch (err) {
         console.error("Error retrieving players:", err);
