@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    const API_URL = "https://tic-tac-toe-p5xh.onrender.com/"; // Замените на ваш URL Render
+    const API_URL = "https://tic-tac-toe-p5xh.onrender.com"; // Замените на ваш URL Render
 
     const cells = document.querySelectorAll(".cell");
     const statusText = document.getElementById("status");
