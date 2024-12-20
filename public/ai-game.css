@@ -1,0 +1,176 @@
+/* Общий стиль страницы */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+}
+
+/* Контейнер приложения */
+.container {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Заголовок */
+h1 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Игровое поле */
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    gap: 10px;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.cell {
+    width: 100px;
+    height: 100px;
+    background-color: #ececec;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    font-weight: bold;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    user-select: none;
+}
+
+.cell:hover {
+    background-color: #ddd;
+}
+
+/* Информация об игре */
+.game-info {
+    margin-bottom: 20px;
+}
+
+/* Стиль формы */
+#settingsForm {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#settingsForm label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+#settingsForm select {
+    width: 80%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 1em;
+}
+
+#settingsForm button {
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+#settingsForm button:hover {
+    background-color: #888;
+}
+
+/* Статус текста */
+#status {
+    margin-top: 10px;
+    font-size: 1.1em;
+}
+
+/* Кнопка "Restart" */
+#restartButton {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#restartButton:hover {
+    background-color: #0056b3;
+}
+
+/* Кнопка "Back to Entry" */
+#backButton {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+#backButton:hover {
+    background-color: #218838;
+}
+
+/* Футер */
+.footer {
+    background-color: #f9f9f9;
+    border-top: 1px solid #ddd;
+    padding: 10px 0;
+    text-align: center;
+    font-size: 0.9em;
+    color: #555;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+
+.back-to-main {
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.back-to-main:hover {
+    background-color: #888;
+}
+
+.back-to-main:active {
+    background-color: #004494;
+}
+
