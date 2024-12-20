@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const cells = document.querySelectorAll(".cell");
     const statusText = document.getElementById("status");
     const restartButton = document.getElementById("restartButton");
-    const backButton = document.getElementById("backButton");
     const playerForm = document.getElementById("playerForm");
     const namePlayer1 = document.getElementById("namePlayer1");
     const namePlayer2 = document.getElementById("namePlayer2");
@@ -81,7 +80,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         await updateScoreboard();
     }
 
-    // Обработка отправки формы
     playerForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         player1 = document.getElementById("player1").value || "Player 1";
@@ -94,11 +92,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         statusText.textContent = `${player1}'s turn (X)`;
         gameActive = true;
         playerForm.style.display = "none";
-        document.querySelector(".game-board").style.display = "grid"; // Показываем игровое поле
-        backButton.style.display = "block"; // Показываем кнопку "Назад"
     });
 
-    // Обработка клика по ячейкам
     cells.forEach(cell => {
         cell.addEventListener("click", async () => {
             if (!gameActive || cell.textContent !== "") return;
@@ -124,7 +119,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     });
 
-    // Обработка кнопки "Restart"
     restartButton.addEventListener("click", () => {
         board = ["", "", "", "", "", "", "", "", ""];
         cells.forEach(cell => (cell.textContent = ""));
@@ -134,24 +128,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         statusText.textContent = `${player1}'s turn (X)`;
     });
 
-    // Обработка кнопки "Назад"
-    backButton.addEventListener("click", () => {
-        // Сбрасываем игру
-        board = ["", "", "", "", "", "", "", "", ""];
-        cells.forEach(cell => (cell.textContent = ""));
-        currentPlayer = "X";
-        gameActive = false;
-
-        // Скрываем игровое поле и показываем форму
-        document.querySelector(".game-board").style.display = "none";
-        playerForm.style.display = "block";
-        restartButton.style.display = "none";
-        backButton.style.display = "none";
-
-        statusText.textContent = "Enter player names and start the game.";
-    });
-
-    // Проверка победителя
     function checkWinner() {
         return winningCombos.some(combo => 
             combo.every(index => board[index] === currentPlayer)
