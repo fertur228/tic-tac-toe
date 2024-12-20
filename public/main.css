@@ -55,6 +55,52 @@ h1 {
     margin-bottom: 20px;
 }
 
+/* Стиль формы */
+#playerForm {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#playerForm label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+#playerForm input {
+    width: 80%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+}
+
+#playerForm input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Кнопка "Start Game" */
+#playerForm button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+#playerForm button:hover {
+    background-color: #0056b3;
+}
+
 #status {
     margin-top: 10px;
     font-size: 1.1em;
