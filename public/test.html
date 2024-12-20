@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Tic-Tac-Toe</h1>
+        <div class="game-info">
+            <form id="playerForm">
+                <label for="player1">Player 1 (X): </label>
+                <input type="text" id="player1" placeholder="Enter Player 1 Name" required><br>
+                <label for="player2">Player 2 (O): </label>
+                <input type="text" id="player2" placeholder="Enter Player 2 Name" required><br><br>
+                <button type="submit">Start Game</button>
+            </form>
+            <p id="status">Enter player names and start the game.</p>
+        </div>
+        <div class="game-board">
+            <div class="cell" data-index="0"></div>
+            <div class="cell" data-index="1"></div>
+            <div class="cell" data-index="2"></div>
+            <div class="cell" data-index="3"></div>
+            <div class="cell" data-index="4"></div>
+            <div class="cell" data-index="5"></div>
+            <div class="cell" data-index="6"></div>
+            <div class="cell" data-index="7"></div>
+            <div class="cell" data-index="8"></div>
+        </div>
+
+        <div class="scoreboard">
+            <h2>Scoreboard</h2>
+            <div id="scorePlayer1" class="score-entry">
+                <p id="namePlayer1">Player 1</p>
+                <p>Games: <span id="gamesPlayer1">0</span></p>
+                <p>Points: <span id="pointsPlayer1">0</span></p>
+            </div>
+            <div id="scorePlayer2" class="score-entry">
+                <p id="namePlayer2">Player 2</p>
+                <p>Games: <span id="gamesPlayer2">0</span></p>
+                <p>Points: <span id="pointsPlayer2">0</span></p>
+            </div>
+        </div>
+        <button id="restartButton" style="display: none;">Restart Game</button>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
